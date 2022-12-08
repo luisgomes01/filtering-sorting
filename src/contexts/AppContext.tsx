@@ -5,6 +5,8 @@ import { getGithubUsers } from "../services";
 type User = {
     id: string | number;
     name: string
+    login: string
+    avatar_url: string
 }
 
 interface AppContextProps {
@@ -23,8 +25,12 @@ export const AppContextProvider = ({ children }: Props) => {
     })
 
     useEffect(() => {
-        (() => {
-            getGithubUsers();
+        (async () => {
+          const data = await getGithubUsers();
+          setGlobalState((prev) => ({
+              ...prev,
+              users: data
+          }))
         })()
     }, [])
 
