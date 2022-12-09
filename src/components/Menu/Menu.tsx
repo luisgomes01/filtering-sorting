@@ -18,14 +18,14 @@ export const Menu = () => {
         backgroundColor: "#eeeeee",
         paddingInline: "50px",
         paddingBlock: "10px",
-        height: "5.5rem",
+        minHeight: "5.5rem",
       }}
     >
       <Grid container spacing={2} alignItems="end">
-        <Grid item lg={4} md={4} sm={4}>
+        <Grid item lg={4} md={4} sm={4} xs={12}>
           <InputLabel id="search">Search</InputLabel>
           <OutlinedInput
-            sx={{ width: "100%" }}
+            fullWidth
             endAdornment={
               <InputAdornment position="end">
                 <IconButton edge="end">
@@ -36,21 +36,16 @@ export const Menu = () => {
           />
         </Grid>
 
-        <Grid item lg={4} md={4} sm={4}>
+        <Grid item lg={4} md={4} sm={4} xs={12}>
           <InputLabel id="sort-by-label">Sort by</InputLabel>
-          <Select
-            labelId="sort-by-label"
-            id="sort-by"
-            label="Sort by"
-            style={{ width: "100%" }}
-          >
+          <Select id="sort-by" fullWidth>
             <MenuItem value={10}>Ten</MenuItem>
             <MenuItem value={20}>Twenty</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
           </Select>
         </Grid>
 
-        <Grid item lg={4} md={4} sm={4}>
+        <Grid item lg={4} md={4} sm={4} xs={12}>
           <InputLabel
             id="actions"
             sx={{ textAlign: "center", marginBottom: "1rem" }}
