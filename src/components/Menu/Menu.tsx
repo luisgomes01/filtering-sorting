@@ -10,8 +10,30 @@ import {
   Grid,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import React, { useState } from "react";
+import { useApp, User } from "../../contexts/AppContext";
 
 export const Menu = () => {
+  const { setGlobalState } = useApp();
+  const [search, setSearch] = useState("");
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleFilter = (currentValue: string) => {
+    if (currentValue.trim().length === 0) {
+      return;
+    }
+
+    setGlobalState((prev: { users: User[] }) => ({
+      ...prev,
+      users: prev.users.filter((user) => {
+        return user.login.toLowerCase().includes(currentValue);
+      }),
+    }));
+  };
+
   return (
     <header
       style={{
@@ -26,6 +48,7 @@ export const Menu = () => {
           <InputLabel id="search">Search</InputLabel>
           <OutlinedInput
             fullWidth
+            onChange={handleInputChange}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton edge="end">
@@ -58,7 +81,7 @@ export const Menu = () => {
             fullWidth
             sx={{ gap: "0.5rem" }}
           >
-            <Button>Apply</Button>
+            <Button onClick={() => handleFilter(search)}>Apply</Button>
             <Button color="secondary">Reset</Button>
           </ButtonGroup>
         </Grid>
