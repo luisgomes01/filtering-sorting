@@ -1,40 +1,50 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { getGithubUsers } from "../services";
 
+export type User = {
+  id: string | number;
+  name: string;
+  login: string;
+  avatar_url: string;
+};
 
-type User = {
-    id: string | number;
-    name: string
-    login: string
-    avatar_url: string
-}
-
-interface AppContextProps {
-    users: User[]
+export interface AppContextProps {
+  globalState: {users: User[];}
+  setGlobalState: (val: any) => void
 }
 
 interface Props {
-    children?: ReactNode
+  children?: ReactNode;
 }
 
-export const AppContext = createContext({} as AppContextProps)
+export const AppContext = createContext({} as AppContextProps);
 
 export const AppContextProvider = ({ children }: Props) => {
-    const [globalState, setGlobalState] = useState({
-        users: []
-    })
+  const [globalState, setGlobalState] = useState({
+    users: [],
+  });
 
-    useEffect(() => {
-        (async () => {
-          const data = await getGithubUsers();
-          setGlobalState((prev) => ({
-              ...prev,
-              users: data
-          }))
-        })()
-    }, [])
+  useEffect(() => {
+    (async () => {
+      const data = await getGithubUsers();
+      setGlobalState((prev) => ({
+        ...prev,
+        users: data,
+      }));
+    })();
+  }, []);
 
-    return <AppContext.Provider value={globalState}>{children}</AppContext.Provider>
-}
+  return (
+    <AppContext.Provider value={{globalState, setGlobalState}}>
+      {children}
+    </AppContext.Provider>
+  );
+};
 
-export const useApp = () => useContext(AppContext)
+export const useApp = () => useContext(AppContext);
