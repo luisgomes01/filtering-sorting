@@ -12,6 +12,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
 import { useApp, User } from "../../contexts/AppContext";
+import { filterUsers } from "../../utils";
 
 export const Menu = () => {
   const { setGlobalState } = useApp();
@@ -28,9 +29,7 @@ export const Menu = () => {
 
     setGlobalState((prev: { users: User[] }) => ({
       ...prev,
-      users: prev.users.filter((user) => {
-        return user.login.toLowerCase().includes(currentValue);
-      }),
+      users: filterUsers(prev, currentValue),
     }));
   };
 
