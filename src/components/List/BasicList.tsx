@@ -9,7 +9,7 @@ export default function BasicList() {
     <main>
       <Container maxWidth="lg">
         <List>
-          {globalState.users.map((user: User) => (
+          {globalState.filteredUsers.map((user: User) => (
             <BasicListItem
               name={user.login}
               avatar={user.avatar_url}
