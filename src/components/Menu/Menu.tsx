@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
-import { useApp, User } from "../../contexts/AppContext";
+import { useApp } from "../../contexts/AppContext";
 import { filterUsers } from "../../utils";
 
 export const Menu = () => {
@@ -24,13 +24,26 @@ export const Menu = () => {
 
   const handleFilter = (currentValue: string) => {
     if (currentValue.trim().length === 0) {
+      setGlobalState((prev) => ({
+        ...prev,
+        filteredUsers: prev.users,
+      }));
       return;
     }
 
-    setGlobalState((prev: { users: User[] }) => ({
+    setGlobalState((prev) => ({
       ...prev,
-      users: filterUsers(prev, currentValue),
+      filteredUsers: filterUsers(prev.users, currentValue),
     }));
+  };
+
+  const handleReset = () => {
+    setGlobalState((prev) => ({
+      ...prev,
+      filteredUsers: prev.users,
+    }));
+
+    setSearch("");
   };
 
   return (
@@ -55,6 +68,7 @@ export const Menu = () => {
                 </IconButton>
               </InputAdornment>
             }
+            value={search}
           />
         </Grid>
 
@@ -81,7 +95,9 @@ export const Menu = () => {
             sx={{ gap: "0.5rem" }}
           >
             <Button onClick={() => handleFilter(search)}>Apply</Button>
-            <Button color="secondary">Reset</Button>
+            <Button color="secondary" onClick={handleReset}>
+              Reset
+            </Button>
           </ButtonGroup>
         </Grid>
       </Grid>
