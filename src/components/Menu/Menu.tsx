@@ -8,6 +8,7 @@ import {
   Select,
   MenuItem,
   Grid,
+  SelectChangeEvent,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
@@ -17,9 +18,14 @@ import { filterUsers } from "../../utils";
 export const Menu = () => {
   const { setGlobalState } = useApp();
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    setSort(e.target.value);
   };
 
   const handleFilter = (currentValue: string) => {
@@ -74,10 +80,14 @@ export const Menu = () => {
 
         <Grid item lg={4} md={4} sm={4} xs={12}>
           <InputLabel id="sort-by-label">Sort by</InputLabel>
-          <Select id="sort-by" fullWidth>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+          <Select
+            id="sort-by"
+            fullWidth
+            onChange={handleSelectChange}
+            value={sort}
+          >
+            <MenuItem value="name">Name</MenuItem>
+            <MenuItem value="ID">ID</MenuItem>
           </Select>
         </Grid>
 
