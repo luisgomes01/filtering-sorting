@@ -8,3 +8,9 @@ export const filterUsers = (users: User[], searchValue: string) => {
         );
     })
 }
+
+export const sortUsers = (users: User[], sortValue: string) => {
+    return users.sort((a, b) => {
+        return a[sortValue] > b[sortValue] ? -1 : 1
+    })
+}
