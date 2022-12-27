@@ -12,6 +12,7 @@ export type User = {
   name: string;
   login: string;
   avatar_url: string;
+  [key: string]: string;
 };
 
 export type GlobalState = {
