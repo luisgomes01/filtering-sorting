@@ -8,30 +8,54 @@ import {
   Select,
   MenuItem,
   Grid,
+  SelectChangeEvent,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useState } from "react";
-import { useApp, User } from "../../contexts/AppContext";
+import { useApp } from "../../contexts/AppContext";
+import { filterUsers, sortUsers } from "../../utils";
+
+interface Props {
+  searchValue: string;
+  sortValue: string;
+}
 
 export const Menu = () => {
   const { setGlobalState } = useApp();
-  const [search, setSearch] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [sortValue, setSortValue] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+    setSearchValue(e.target.value);
   };
 
-  const handleFilter = (currentValue: string) => {
-    if (currentValue.trim().length === 0) {
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    setSortValue(e.target.value);
+  };
+
+  const handleFilterAndSort = ({ searchValue, sortValue}: Props) => {
+    if (searchValue.trim().length === 0 && sortValue.length === 0) {
+      setGlobalState((prev) => ({
+        ...prev,
+        filteredUsers: prev.users,
+      }));
       return;
     }
 
-    setGlobalState((prev: { users: User[] }) => ({
+    setGlobalState((prev) => ({
       ...prev,
-      users: prev.users.filter((user) => {
-        return user.login.toLowerCase().includes(currentValue);
-      }),
+      filteredUsers: sortUsers(filterUsers(prev.users, searchValue), sortValue),
     }));
+  };
+
+  const handleReset = () => {
+    setGlobalState((prev) => ({
+      ...prev,
+      filteredUsers: prev.users,
+    }));
+
+    setSearchValue("");
+    setSortValue("")
   };
 
   return (
@@ -56,15 +80,20 @@ export const Menu = () => {
                 </IconButton>
               </InputAdornment>
             }
+            value={searchValue}
           />
         </Grid>
 
         <Grid item lg={4} md={4} sm={4} xs={12}>
           <InputLabel id="sort-by-label">Sort by</InputLabel>
-          <Select id="sort-by" fullWidth>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+          <Select
+            id="sort-by"
+            fullWidth
+            onChange={handleSelectChange}
+            value={sortValue}
+          >
+            <MenuItem value="login">name</MenuItem>
+            <MenuItem value="id">id</MenuItem>
           </Select>
         </Grid>
 
@@ -81,8 +110,12 @@ export const Menu = () => {
             fullWidth
             sx={{ gap: "0.5rem" }}
           >
-            <Button onClick={() => handleFilter(search)}>Apply</Button>
-            <Button color="secondary">Reset</Button>
+            <Button onClick={() => handleFilterAndSort({ searchValue, sortValue })}>
+              Apply
+            </Button>
+            <Button color="secondary" onClick={handleReset}>
+              Reset
+            </Button>
           </ButtonGroup>
         </Grid>
       </Grid>
